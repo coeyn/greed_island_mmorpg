@@ -1,10 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://d10l8yu5h3go4"]
+[gd_scene load_steps=4 format=3 uid="uid://d10l8yu5h3go4"]
 
 [ext_resource type="PackedScene" uid="uid://bu8gviwmceoi" path="res://scenes/player.tscn" id="1_nnsk1"]
+[ext_resource type="Script" uid="uid://520ybieg83vl" path="res://scripts/world.gd" id="1_rwgxs"]
 
 [sub_resource type="TileSet" id="TileSet_rwgxs"]
 
 [node name="world" type="Node2D"]
+script = ExtResource("1_rwgxs")
+player_scene = ExtResource("1_nnsk1")
 
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_rwgxs")
