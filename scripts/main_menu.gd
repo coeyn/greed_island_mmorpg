@@ -18,5 +18,5 @@ func _on_join():
 	var ip = ip_input.text.strip_edges()
 	if ip == "":
 		ip = "127.0.0.1"
-	Network.join_server(ip)
-	get_tree().change_scene_to_file("res://scenes/World.tscn")
+       Network.join_server(ip)
+        get_tree().change_scene_to_file("res://scenes/world.tscn")

@@ -15,26 +15,20 @@ func _ready():
 	var my_id = multiplayer.get_unique_id()
 	print("→ Mon ID réseau :", my_id)
 
-	spawn_player.rpc(my_id)
+        spawn_player.rpc(my_id)
 
-	if multiplayer.is_server():
-		multiplayer.peer_connected.connect(_on_peer_connected)
+        if multiplayer.is_server():
+                multiplayer.peer_connected.connect(_on_peer_connected)
+        else:
+                # Inform the server that this client is ready to receive
+                # information about the already connected players.
+                rpc_id(1, "client_ready")
 
 
 
 func _on_peer_connected(id: int):
-	print("→ Nouveau joueur connecté : %d" % id)
-
-	# 1. D'abord on demande à tout le monde de spawn ce joueur
-	spawn_player.rpc(id)
-
-	# 2. Puis on attend 1 frame pour s'assurer qu'il soit bien instancié
-	await get_tree().process_frame
-
-	# 3. Ensuite on envoie au nouveau venu tous les autres joueurs
-	for peer_id in multiplayer.get_peers():
-		if peer_id != id:
-			rpc_id(id, "spawn_player", peer_id)
+        print("→ Nouveau joueur connecté : %d" % id)
+        # Waiting for the client to notify that its world is ready
 
 
 var players = {}
@@ -45,5 +39,16 @@ func spawn_player(id: int):
 	player.name = "Player_%s" % id
 	player.set_multiplayer_authority(id)
 	player.position = Vector2(100 + id * 40, 100)
-	add_child(player)
-	players[id] = player
+        add_child(player)
+        players[id] = player
+
+@rpc("authority")
+func client_ready():
+        if not multiplayer.is_server():
+                return
+
+        var id = multiplayer.get_remote_sender_id()
+
+        for peer_id in players.keys():
+                if peer_id != id:
+                        rpc_id(id, "spawn_player", peer_id)
