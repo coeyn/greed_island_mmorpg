@@ -19,4 +19,4 @@ func _on_join():
 	if ip == "":
 		ip = "127.0.0.1"
 	Network.join_server(ip)
-	get_tree().change_scene_to_file("res://scenes/World.tscn")
+	get_tree().change_scene_to_file("res://scenes/world.tscn")
