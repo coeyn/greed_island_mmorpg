@@ -1,10 +1,14 @@
-[gd_scene load_steps=17 format=3 uid="uid://bu8gviwmceoi"]
+[gd_scene load_steps=18 format=3 uid="uid://bu8gviwmceoi"]
 
 [ext_resource type="Script" uid="uid://c4j4bk55o0ell" path="res://scripts/player.gd" id="1_g2els"]
-[ext_resource type="Texture2D" uid="uid://bt8v8bp7jsaog" path="res://assets/characters/$test.png" id="2_qhqgy"]
+[ext_resource type="Texture2D" uid="uid://cbowtf6rwryqa" path="res://assets/characters/$test.png" id="2_qhqgy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dqkch"]
 size = Vector2(29, 43)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f1ej7"]
+atlas = ExtResource("2_qhqgy")
+region = Rect2(48, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g2els"]
 atlas = ExtResource("2_qhqgy")
@@ -60,6 +64,14 @@ animations = [{
 "loop": true,
 "name": &"default",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f1ej7")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 6.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -139,6 +151,4 @@ shape = SubResource("RectangleShape2D_dqkch")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_f1ej7")
-animation = &"walk_down"
-frame = 2
-frame_progress = 0.291668
+animation = &"idle"
