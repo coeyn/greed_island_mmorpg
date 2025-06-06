@@ -43,8 +43,3 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 text = "Rejoindre une partie"
-
-[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer"]
-layout_mode = 2
-text = "bonjour"
-fit_content = true
