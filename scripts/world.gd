@@ -44,6 +44,8 @@ func create_player(id: int):
 		
 	var player = player_scene.instantiate()
 	player.name = str(id)
+	if player.has_node("NameLabel"):
+		player.get_node("NameLabel").text = "Joueur " + str(id)
 	player.position = Vector2(100 + id * 40, 100)
 	add_child(player)
 	
