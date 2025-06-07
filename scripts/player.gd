@@ -3,8 +3,11 @@ extends CharacterBody2D
 const SPEED := 200.0
 
 @onready var sprite = $AnimatedSprite2D
-@onready var name_label = $NameLabel  # Référence au Label pour le pseudo
+@onready var name_label = $NameLabel
 
+@export var nickname: String = ""
+
+# S'assurer que les RPCs sont configurés avant d'être utilisés
 func _enter_tree():
 	# Vérifier l'autorité dès l'entrée dans l'arbre
 	if is_multiplayer_authority():
@@ -16,27 +19,41 @@ func _ready():
 	# Désactiver le traitement physique sur les instances non-autorités
 	set_physics_process(is_multiplayer_authority())
 	
+	# Attendre une frame pour s'assurer que le nœud est bien dans l'arbre
+	await get_tree().process_frame
+	
 	# Définir le nom du joueur si nous sommes l'autorité
 	if is_multiplayer_authority():
-		# Utiliser le pseudo du Network singleton
-		if Network.player_nickname != "":
-			name_label.text = Network.player_nickname
-			sync_nickname.rpc(Network.player_nickname)
-		else:
-			# Fallback au nom du nœud si pas de pseudo (ne devrait pas arriver)
-			name_label.text = str(name)
-			sync_nickname.rpc(str(name))
+		update_nickname(Network.player_nickname)
 
-@rpc("unreliable")
+	if name_label:
+		name_label.text = nickname
+
+@rpc("any_peer", "call_local")
 func sync_state(pos: Vector2, anim: String):
 	# Seules les instances non-autorités reçoivent les mises à jour
 	if not is_multiplayer_authority():
 		position = pos
 		sprite.play(anim)
 
-@rpc("any_peer")
-func sync_nickname(nickname: String):
-	# Mettre à jour le pseudo affiché
+func update_nickname(new_nickname: String):
+	if name_label and new_nickname != "":
+		name_label.text = new_nickname
+		# Propager le changement seulement si nous sommes l'autorité
+		if is_multiplayer_authority():
+			# Attendre une frame pour s'assurer que le nœud est bien dans l'arbre partout
+			await get_tree().process_frame
+			sync_nickname.rpc(new_nickname)
+
+@rpc("any_peer", "call_local")
+func sync_nickname(new_nickname: String):
+	if name_label:
+		name_label.text = new_nickname
+	# Met à jour la propriété synchronisée
+	nickname = new_nickname
+
+func set_nickname(new_nickname: String):
+	nickname = new_nickname
 	if name_label:
 		name_label.text = nickname
 

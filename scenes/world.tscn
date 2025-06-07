@@ -12,8 +12,3 @@ player_scene = ExtResource("1_nnsk1")
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_rwgxs")
 format = 2
-
-[node name="Player" type="Node2D" parent="."]
-
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="Player"]
-spawn_path = NodePath("..")
